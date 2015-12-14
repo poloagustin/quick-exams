@@ -4,7 +4,7 @@ module QuickExams {
     name: string;
 
     constructor(name: string, modules: Array<string>) {
-      this.app = ng.module(name, modules);
+      this.app = angular.module(name, modules);
       this.name = name;
     }
 
@@ -19,12 +19,12 @@ module QuickExams {
     addConfiguration(config: Array<any>) {
       this.app.config(config);
     }
-
+    
     addConstant(name: string, obj: any) {
       this.app.constant(name, obj);
     }
     
-    addDirective(name: string, obj: any) {
+    addDirective(name: string, obj: ng.IDirectiveFactory) {
       this.app.directive(name, obj);
     }
     

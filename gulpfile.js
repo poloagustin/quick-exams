@@ -8,7 +8,7 @@ var clean = require('gulp-clean');
 gulp.task('default', ['copy-html', 'compile-ts'], function () { });
 
 gulp.task('clean-html', function () {
-  gulp.src(['wwwroot/**/*.html'])
+  gulp.src(['wwwroot/**/*.html', 'wwwroot/**/*.ejs'])
     .pipe(clean());
 });
 
@@ -18,12 +18,12 @@ gulp.task('clean-api', function () {
 });
 
 gulp.task('clean-app', function () {
-  gulp.src(['wwwroot/app.js'])
+  gulp.src(['wwwroot/js/app.js'])
     .pipe(clean());
 });
 
 gulp.task('copy-html', ['clean-html'], function () {
-  gulp.src(['app/**/*.html'])
+  gulp.src(['app/**/*.html', 'app/**/*.ejs'])
     .pipe(gulp.dest('wwwroot'));
 });
 
@@ -37,4 +37,12 @@ gulp.task('compile-ts-api', ['clean-api'], function () {
 gulp.task('compile-ts-app', ['clean-app'], function () {
   var proj = tsc.createProject('app/tsconfig.json');
   proj.src().pipe(tsc(proj)).js.pipe(gulp.dest('wwwroot/js'));
+});
+
+gulp.task('sourcemap-app', ['compile-ts-app'], function () {
+});
+
+gulp.task('watch', function () {
+  gulp.watch('./**/*.ts', ['compile-ts']);
+  gulp.watch(['app/**/*.html', 'app/**/*.ejs', 'views/**/*.ejs', 'views/**/*.html'], ['copy-html']);
 });
