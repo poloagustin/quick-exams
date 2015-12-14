@@ -3,7 +3,6 @@
   "files.exclude": {
     "**/.git": true,
     "**/.DS_Store": true,
-    "bin/www": true,
     "app.js": true,
     "controllers/**/*.js": true,
     "domain/**/*.js": true,

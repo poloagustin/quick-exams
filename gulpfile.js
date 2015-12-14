@@ -1,35 +1,40 @@
 /// <reference path="typings/tsd.d.ts" />
 
 var gulp = require('gulp');
-var tsc = require('gulp-tsc');
+var tsc = require('gulp-typescript');
 var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 
-gulp.task('default', ['clean', 'copy-html', 'compile-ts'], function () { });
+gulp.task('default', ['copy-html', 'compile-ts'], function () { });
 
-gulp.task('clean', function () {
-  gulp.src(['wwwroot/**/*.html', '**/*.js', '!gulpfile.js'])
+gulp.task('clean-html', function () {
+  gulp.src(['wwwroot/**/*.html'])
     .pipe(clean());
 });
 
-gulp.task('copy-html', function () {
+gulp.task('clean-api', function () {
+  gulp.src(['**/*.js', '!gulpfile.js', '!node_modules/**/*.*', '!typings/**/*.*', '!wwwroot/**/*.*'])
+    .pipe(clean());
+});
+
+gulp.task('clean-app', function () {
+  gulp.src(['wwwroot/app.js'])
+    .pipe(clean());
+});
+
+gulp.task('copy-html', ['clean-html'], function () {
   gulp.src(['app/**/*.html'])
     .pipe(gulp.dest('wwwroot'));
 });
 
 gulp.task('compile-ts', ['compile-ts-app', 'compile-ts-api'], function () { });
 
-gulp.task('compile-ts-api', function () {
-  gulp.src(['**/*.ts', '!app/**/*.ts'])
-    .pipe(tsc({ sourceMap: true }))
-    .pipe(gulp.dest('/'));
+gulp.task('compile-ts-api', ['clean-api'], function () {
+  var proj = tsc.createProject('tsconfig.json');
+  proj.src().pipe(tsc(proj)).js.pipe(gulp.dest('./'));
 });
 
-gulp.task('compile-ts-app', function () {
-  gulp.src(['app/**/*.ts'])
-    .pipe(tsc({
-      sourceMap: true,
-      out: 'app.js'
-    }))
-    .pipe(gulp.dest('/wwwroot/js'));
+gulp.task('compile-ts-app', ['clean-app'], function () {
+  var proj = tsc.createProject('app/tsconfig.json');
+  proj.src().pipe(tsc(proj)).js.pipe(gulp.dest('wwwroot/js'));
 });
