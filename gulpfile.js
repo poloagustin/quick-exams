@@ -43,6 +43,5 @@ gulp.task('sourcemap-app', ['compile-ts-app'], function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('./**/*.ts', ['compile-ts']);
-  gulp.watch(['app/**/*.html', 'app/**/*.ejs', 'views/**/*.ejs', 'views/**/*.html'], ['copy-html']);
+  gulp.watch(['**/*.*'], ['default']);
 });
